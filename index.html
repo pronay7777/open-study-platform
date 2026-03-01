@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open Study Platform</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+}
+
+:root {
+    --primary: #0b3d91;
+    --primary-light: #1456c3;
+    --primary-dark: #082a6b;
+    --bg-color: #f4f6f9;
+    --white: #ffffff;
+    --text-dark: #333;
+    --text-light: #666;
+    --shadow: 0 2px 10px rgba(0,0,0,0.1);
+    --transition: all 0.3s ease;
+}
+
+body{
+    display:flex;
+    background:var(--bg-color);
+    min-height:100vh;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar{
+    width:240px;
+    height:100vh;
+    background:var(--primary);
+    color:white;
+    position:fixed;
+    left:0;
+    top:0;
+    padding-top:20px;
+    z-index:1000;
+    transition: var(--transition);
+}
+
+.logo{
+    font-size:22px;
+    font-weight:bold;
+    text-align:center;
+    margin-bottom:30px;
+    padding:0 10px;
+}
+
+.sidebar a{
+    display:block;
+    color:white;
+    padding:14px 20px;
+    text-decoration:none;
+    transition:0.3s;
+    border-left:3px solid transparent;
+}
+
+.sidebar a:hover, .sidebar a.active{
+    background:var(--primary-light);
+    border-left-color:var(--white);
+}
+
+/* Mobile menu button */
+.menu-toggle{
+    display:none;
+    position:fixed;
+    top:10px;
+    left:10px;
+    z-index:1001;
+    background:var(--primary);
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:4px;
+    cursor:pointer;
+    font-size:18px;
+}
+
+/* ================= MAIN AREA ================= */
+.main{
+    margin-left:240px;
+    width:calc(100% - 240px);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+
+/* ================= NAVBAR ================= */
+.navbar{
+    background:var(--primary);
+    color:white;
+    padding:15px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.navbar .search-container{
+    flex:1;
+    max-width:400px;
+}
+
+.navbar input{
+    padding:10px 15px;
+    width:100%;
+    border-radius:25px;
+    border:none;
+    outline:none;
+    font-size:14px;
+    transition: var(--transition);
+}
+
+.navbar input:focus{
+    box-shadow:0 0 0 3px rgba(255,255,255,0.3);
+}
+
+.nav-links a{
+    color:white;
+    margin-left:20px;
+    text-decoration:none;
+    transition: var(--transition);
+    padding:8px 15px;
+    border-radius:4px;
+}
+
+.nav-links a:hover{
+    background:rgba(255,255,255,0.1);
+}
+
+.nav-links .btn-login{
+    background:var(--primary-light);
+}
+
+.nav-links .btn-register{
+    background:var(--white);
+    color:var(--primary);
+}
+
+.nav-user{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.nav-user span{
+    color:white;
+}
+
+.nav-user .btn-logout{
+    background:rgba(255,255,255,0.2);
+    color:white;
+    padding:8px 15px;
+    border-radius:4px;
+    text-decoration:none;
+    transition:var(--transition);
+}
+
+.nav-user .btn-logout:hover{
+    background:rgba(255,255,255,0.3);
+}
+
+/* ================= SECTIONS ================= */
+.section{
+    display:none;
+    padding:30px;
+    flex:1;
+}
+
+.section.active{
+    display:block;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn{
+    from{ opacity:0; transform:translateY(10px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+/* ================= HOME SECTION ================= */
+.banner{
+    background:linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color:white;
+    padding:50px 40px;
+    border-radius:12px;
+    text-align:center;
+    margin-bottom:40px;
+    box-shadow:var(--shadow);
+}
+
+.banner h1{
+    font-size:2.5rem;
+    margin-bottom:10px;
+}
+
+.banner p{
+    font-size:1.2rem;
+    opacity:0.9;
+}
+
+.section-title{
+    font-size:1.8rem;
+    color:var(--text-dark);
+    margin-bottom:25px;
+    position:relative;
+    padding-bottom:10px;
+}
+
+.section-title::after{
+    content:'';
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:60px;
+    height:3px;
+    background:var(--primary);
+}
+
+/* ================= CARDS ================= */
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:var(--white);
+    padding:25px;
+    border-radius:12px;
+    box-shadow:var(--shadow);
+    transition: var(--transition);
+    border-top:4px solid var(--primary);
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 8px 25px rgba(0,0,0,0.15);
+}
+
+.card-category{
+    display:inline-block;
+    background:var(--primary-light);
+    color:white;
+    padding:4px 12px;
+    border-radius:20px;
+    font-size:12px;
+    margin-bottom:10px;
+}
+
+.card h3{
+    margin-bottom:10px;
+    color:var(--text-dark);
+}
+
+.card p{
+    color:var(--text-light);
+    margin-bottom:15px;
+    font-size:14px;
+}
+
+.card-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:15px;
+    padding-top:15px;
+    border-top:1px solid #eee;
+}
+
+.card-size{
+    font-size:12px;
+    color:var(--text-light);
+}
+
+.card button, .card .btn{
+    padding:10px 20px;
+    background:var(--primary);
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    transition: var(--transition);
+    font-size:14px;
+}
+
+.card button:hover, .card .btn:hover{
+    background:var(--primary-light);
+    transform:scale(1.02);
+}
+
+.card .btn-download{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+}
+
+/* ================= NOTES SECTION ================= */
+.notes-filters{
+    margin-bottom:20px;
+}
+
+.filter-row{
+    display:flex;
+    gap:15px;
+    margin-bottom:15px;
+    flex-wrap:wrap;
+    align-items:center;
+}
+
+.filter-label{
+    font-weight:500;
+    color:var(--text-dark);
+    margin-right:10px;
+}
+
+.filter-btn{
+    padding:10px 20px;
+    background:var(--white);
+    color:var(--text-dark);
+    border:2px solid var(--primary);
+    border-radius:25px;
+    cursor:pointer;
+    transition: var(--transition);
+    font-size:14px;
+}
+
+.filter-btn:hover, .filter-btn.active{
+    background:var(--primary);
+    color:white;
+}
+
+.filter-select{
+    padding:10px 20px;
+    border:2px solid var(--primary);
+    border-radius:25px;
+    font-size:14px;
+    cursor:pointer;
+    outline:none;
+    background:var(--white);
+    color:var(--text-dark);
+}
+
+.filter-select:focus{
+    border-color:var(--primary-light);
+}
+
+.no-results{
+    text-align:center;
+    padding:50px;
+    color:var(--text-light);
+}
+
+/* ================= UPLOAD SECTION ================= */
+.upload-container{
+    max-width:600px;
+    margin:0 auto;
+}
+
+.upload form{
+    background:var(--white);
+    padding:30px;
+    border-radius:12px;
+    box-shadow:var(--shadow);
+}
+
+.upload h2{
+    margin-bottom:25px;
+    color:var(--text-dark);
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:8px;
+    color:var(--text-dark);
+    font-weight:500;
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea{
+    width:100%;
+    padding:12px 15px;
+    border:2px solid #e0e0e0;
+    border-radius:8px;
+    font-size:14px;
+    transition: var(--transition);
+    outline:none;
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus{
+    border-color:var(--primary);
+}
+
+.form-group textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+.form-group input[type="file"]{
+    padding:10px;
+    border-style:dashed;
+}
+
+.upload button{
+    padding:14px 30px;
+    background:var(--primary);
+    color:white;
+    border:none;
+    width:100%;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:500;
+    transition: var(--transition);
+}
+
+.upload button:hover{
+    background:var(--primary-light);
+}
+
+.upload button:disabled{
+    background:#ccc;
+    cursor:not-allowed;
+}
+
+/* Success message */
+.success-message{
+    display:none;
+    background:#4caf50;
+    color:white;
+    padding:15px;
+    border-radius:8px;
+    margin-bottom:20px;
+    text-align:center;
+}
+
+/* ================= CATEGORIES SECTION ================= */
+.categories-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:20px;
+}
+
+.category-card{
+    background:var(--white);
+    padding:30px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:var(--shadow);
+    cursor:pointer;
+    transition: var(--transition);
+}
+
+.category-card:hover{
+    transform:translateY(-5px);
+    background:var(--primary);
+    color:white;
+}
+
+.category-card h3{
+    font-size:3rem;
+    margin-bottom:10px;
+}
+
+.category-card p{
+    font-size:14px;
+    opacity:0.8;
+}
+
+/* ================= AUTH FORMS ================= */
+.auth-container{
+    max-width:500px;
+    margin:0 auto;
+}
+
+.auth-form{
+    background:var(--white);
+    padding:40px;
+    border-radius:12px;
+    box-shadow:var(--shadow);
+}
+
+.auth-form .form-group{
+    margin-bottom:20px;
+}
+
+.auth-form label{
+    display:block;
+    margin-bottom:8px;
+    color:var(--text-dark);
+    font-weight:500;
+}
+
+.auth-form input, 
+.auth-form select{
+    width:100%;
+    padding:12px 15px;
+    border:2px solid #e0e0e0;
+    border-radius:8px;
+    font-size:14px;
+    transition: var(--transition);
+    outline:none;
+}
+
+.auth-form input:focus, 
+.auth-form select:focus{
+    border-color:var(--primary);
+}
+
+.auth-btn{
+    width:100%;
+    padding:14px;
+    background:var(--primary);
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    font-weight:500;
+    cursor:pointer;
+    transition: var(--transition);
+}
+
+.auth-btn:hover{
+    background:var(--primary-light);
+}
+
+.auth-switch{
+    text-align:center;
+    margin-top:20px;
+    color:var(--text-light);
+}
+
+.auth-switch a{
+    color:var(--primary);
+    text-decoration:none;
+    font-weight:500;
+}
+
+.auth-switch a:hover{
+    text-decoration:underline;
+}
+
+/* ================= ABOUT SECTION ================= */
+.about-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:25px;
+}
+
+.about-card{
+    background:var(--white);
+    padding:30px;
+    border-radius:12px;
+    box-shadow:var(--shadow);
+}
+
+.about-card h3{
+    color:var(--primary);
+    margin-bottom:15px;
+    font-size:1.4rem;
+}
+
+.about-card p{
+    color:var(--text-light);
+    line-height:1.6;
+    margin-bottom:10px;
+}
+
+.about-card ul{
+    list-style:none;
+    padding:0;
+}
+
+.about-card ul li{
+    padding:8px 0;
+    color:var(--text-light);
+    position:relative;
+    padding-left:20px;
+}
+
+.about-card ul li::before{
+    content:'✓';
+    position:absolute;
+    left:0;
+    color:var(--primary);
+    font-weight:bold;
+}
+
+/* ================= FOOTER ================= */
+footer{
+    background:var(--primary-dark);
+    color:white;
+    text-align:center;
+    padding:20px;
+    margin-top:auto;
+}
+
+footer a{
+    color:white;
+    margin:0 10px;
+    text-decoration:none;
+}
+
+footer a:hover{
+    text-decoration:underline;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width:768px){
+    .menu-toggle{
+        display:block;
+    }
+    
+    .sidebar{
+        left:-240px;
+    }
+    
+    .sidebar.open{
+        left:0;
+    }
+    
+    .main{
+        margin-left:0;
+        width:100%;
+    }
+    
+    .navbar{
+        padding:15px;
+        padding-left:50px;
+    }
+    
+    .nav-links{
+        display:none;
+    }
+    
+    .banner h1{
+        font-size:1.8rem;
+    }
+    
+    .banner{
+        padding:30px 20px;
+    }
+    
+    .cards{
+        grid-template-columns:1fr;
+    }
+    
+    .contact-container{
+        grid-template-columns:1fr;
+    }
+    
+    .notes-filters{
+        overflow-x:auto;
+        flex-wrap:nowrap;
+        padding-bottom:10px;
+    }
+    
+    .filter-btn{
+        flex-shrink:0;
+    }
+}
+
+/* ================= LOADING ================= */
+.loading{
+    display:inline-block;
+    width:20px;
+    height:20px;
+    border:3px solid rgba(255,255,255,0.3);
+    border-radius:50%;
+    border-top-color:white;
+    animation:spin 1s ease-in-out infinite;
+    margin-right:10px;
+}
+
+@keyframes spin{
+    to{ transform:rotate(360deg); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Mobile Menu Toggle -->
+<button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+    <div class="logo">📚 Open Study Platform</div>
+    <a href="#home" class="active" onclick="showSection('home')">🏠 Home</a>
+    <a href="#notes" onclick="showSection('notes')">📚 Notes</a>
+    <a href="#upload" onclick="showSection('upload')">⬆ Upload</a>
+    <a href="#categories" onclick="showSection('categories')">📂 Categories</a>
+    <a href="#about" onclick="showSection('about')">ℹ️ About</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search notes..." oninput="handleSearch()">
+    </div>
+    <div class="nav-links" id="navLinksContainer">
+        <a href="#login" class="btn-login" onclick="showSection('login')">Login</a>
+        <a href="#register" class="btn-register" onclick="showSection('register')">Register</a>
+    </div>
+</div>
+
+<!-- HOME SECTION -->
+<div class="section active" id="homeSection">
+    <div class="banner">
+        <h1>Welcome to Open Study Platform</h1>
+        <p>Free Notes • Free Knowledge • Free Future</p>
+    </div>
+
+    <h2 class="section-title">Latest Notes</h2>
+    <div class="cards" id="latestNotes">
+        <!-- Populated by JavaScript -->
+    </div>
+</div>
+
+<!-- NOTES SECTION -->
+<div class="section" id="notesSection">
+    <h2 class="section-title">All Notes</h2>
+    
+    <div class="notes-filters" id="categoryFilters">
+        <!-- Class Filter -->
+        <div class="filter-row">
+            <span class="filter-label">Select Class:</span>
+            <select id="classFilter" class="filter-select" onchange="filterNotes()">
+                <option value="all">All Classes</option>
+                <option value="Class 9">Class 9</option>
+                <option value="Class 10">Class 10</option>
+                <option value="Class 11">Class 11</option>
+                <option value="Class 12">Class 12</option>
+            </select>
+        </div>
+        
+        <!-- Subject Filter -->
+        <div class="filter-row">
+            <span class="filter-label">Select Subject:</span>
+            <button class="filter-btn active" onclick="filterNotes('all-subject', this)">All</button>
+            <button class="filter-btn" onclick="filterNotes('Mathematics', this)">Mathematics</button>
+            <button class="filter-btn" onclick="filterNotes('Science', this)">Science</button>
+            <button class="filter-btn" onclick="filterNotes('English', this)">English</button>
+            <button class="filter-btn" onclick="filterNotes('Social Science', this)">Social Science</button>
+            <button class="filter-btn" onclick="filterNotes('Chemistry', this)">Chemistry</button>
+            <button class="filter-btn" onclick="filterNotes('Biology', this)">Biology</button>
+        </div>
+    </div>
+    
+    <div class="cards" id="allNotes">
+        <!-- Populated by JavaScript -->
+    </div>
+</div>
+
+<!-- UPLOAD SECTION -->
+<div class="section" id="uploadSection">
+    <div class="upload-container">
+        <div class="success-message" id="successMessage">
+            ✅ Note uploaded successfully!
+        </div>
+        <h2>Upload Notes (Admin)</h2>
+        <form id="uploadForm" onsubmit="handleUpload(event)">
+            <div class="form-group">
+                <label for="noteTitle">Note Title *</label>
+                <input type="text" id="noteTitle" placeholder="Enter note title" required minlength="3">
+            </div>
+            <div class="form-group">
+                <label for="noteClass">Class *</label>
+                <select id="noteClass" required>
+                    <option value="">Select Class</option>
+                    <option value="Class 9">Class 9</option>
+                    <option value="Class 10">Class 10</option>
+                    <option value="Class 11">Class 11</option>
+                    <option value="Class 12">Class 12</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="noteCategory">Subject *</label>
+                <select id="noteCategory" required>
+                    <option value="">Select Subject</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Science">Science</option>
+                    <option value="Physics">Physics</option>
+                    <option value="Chemistry">Chemistry</option>
+                    <option value="Biology">Biology</option>
+                    <option value="English">English</option>
+                    <option value="Social Science">Social Science</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="noteDescription">Description</label>
+                <textarea id="noteDescription" placeholder="Enter description (optional)"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="noteFile">PDF File *</label>
+                <input type="file" id="noteFile" accept=".pdf" required>
+            </div>
+            <button type="submit" id="uploadBtn">Upload PDF</button>
+        </form>
+    </div>
+</div>
+
+<!-- CATEGORIES SECTION -->
+<div class="section" id="categoriesSection">
+    <h2 class="section-title">Browse by Class</h2>
+    <div class="categories-grid">
+        <div class="category-card" onclick="filterByClass('Class 9'); showSection('notes')">
+            <h3>📚</h3>
+            <p>Class 9</p>
+        </div>
+        <div class="category-card" onclick="filterByClass('Class 10'); showSection('notes')">
+            <h3>📖</h3>
+            <p>Class 10</p>
+        </div>
+        <div class="category-card" onclick="filterByClass('Class 11'); showSection('notes')">
+            <h3>📝</h3>
+            <p>Class 11</p>
+        </div>
+        <div class="category-card" onclick="filterByClass('Class 12'); showSection('notes')">
+            <h3>🎓</h3>
+            <p>Class 12</p>
+        </div>
+    </div>
+    
+    <h2 class="section-title" style="margin-top:40px;">Browse by Subject</h2>
+    <div class="categories-grid">
+        <div class="category-card" onclick="filterNotes('Mathematics'); showSection('notes')">
+            <h3>📐</h3>
+            <p>Mathematics</p>
+        </div>
+        <div class="category-card" onclick="filterNotes('Physics'); showSection('notes')">
+            <h3>⚛️</h3>
+            <p>Physics</p>
+        </div>
+        <div class="category-card" onclick="filterNotes('Chemistry'); showSection('notes')">
+            <h3>🧪</h3>
+            <p>Chemistry</p>
+        </div>
+        <div class="category-card" onclick="filterNotes('Biology'); showSection('notes')">
+            <h3>🧬</h3>
+            <p>Biology</p>
+        </div>
+        <div class="category-card" onclick="filterNotes('English'); showSection('notes')">
+            <h3>📖</h3>
+            <p>English</p>
+        </div>
+        <div class="category-card" onclick="filterNotes('Social Science'); showSection('notes')">
+            <h3>🌍</h3>
+            <p>Social Science</p>
+        </div>
+    </div>
+</div>
+
+<!-- LOGIN SECTION -->
+<div class="section" id="loginSection">
+    <div class="auth-container">
+        <h2 class="section-title">Student Login</h2>
+        <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="loginEmail">Email Address</label>
+                <input type="email" id="loginEmail" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter your password" required minlength="6">
+            </div>
+            <button type="submit" class="auth-btn">Login</button>
+            <p class="auth-switch">Don't have an account? <a href="#" onclick="showSection('register')">Register here</a></p>
+        </form>
+    </div>
+</div>
+
+<!-- REGISTER SECTION -->
+<div class="section" id="registerSection">
+    <div class="auth-container">
+        <h2 class="section-title">Create New Account</h2>
+        <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <label for="registerName">Full Name</label>
+                <input type="text" id="registerName" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label for="registerEmail">Email Address</label>
+                <input type="email" id="registerEmail" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="registerPassword">Password</label>
+                <input type="password" id="registerPassword" placeholder="Create a password" required minlength="6">
+            </div>
+            <div class="form-group">
+                <label for="registerConfirmPassword">Confirm Password</label>
+                <input type="password" id="registerConfirmPassword" placeholder="Confirm your password" required>
+            </div>
+            <div class="form-group">
+                <label for="registerClass">Class</label>
+                <select id="registerClass" required>
+                    <option value="">Select your class</option>
+                    <option value="Class 9">Class 9</option>
+                    <option value="Class 10">Class 10</option>
+                    <option value="Class 11">Class 11</option>
+                    <option value="Class 12">Class 12</option>
+                </select>
+            </div>
+            <button type="submit" class="auth-btn">Register</button>
+            <p class="auth-switch">Already have an account? <a href="#" onclick="showSection('login')">Login here</a></p>
+        </form>
+    </div>
+</div>
+
+<!-- ABOUT SECTION -->
+<div class="section" id="aboutSection">
+    <h2 class="section-title">About Open Study Platform</h2>
+    <div class="about-container">
+        <div class="about-card">
+            <h3>🎓 Our Mission</h3>
+            <p>Open Study Platform is dedicated to providing free educational resources for students of all levels. We believe that quality education should be accessible to everyone, everywhere.</p>
+        </div>
+        
+        <div class="about-card">
+            <h3>📚 What We Offer</h3>
+            <ul>
+                <li>Free PDF notes for Classes 9-12</li>
+                <li>Comprehensive study materials across all subjects</li>
+                <li>Easy-to-navigate platform for quick access</li>
+                <li>Regular updates with new content</li>
+            </ul>
+        </div>
+        
+        <div class="about-card">
+            <h3>🌟 Features</h3>
+            <ul>
+                <li>Notes for CBSE/ICSE curriculum</li>
+                <li>Filter by Class (9, 10, 11, 12)</li>
+                <li>Filter by Subject (Math, Science, English, etc.)</li>
+                <li>Search functionality</li>
+                <li>Easy download options</li>
+            </ul>
+        </div>
+        
+        <div class="about-card">
+            <h3>👥 Who Can Use</h3>
+            <p>Our platform is designed for:</p>
+            <ul>
+                <li>Class 9-12 students</li>
+                <li>CBSE and ICSE students</li>
+                <li>Parents helping with studies</li>
+                <li>Teachers looking for resources</li>
+            </ul>
+        </div>
+        
+        <div class="about-card">
+            <h3>📱 Stay Connected</h3>
+            <p>Join our community of learners! For any queries, reach out to us at:</p>
+            <p><strong>Email:</strong> contact@openstudy.com</p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 Open Study Platform | Made for Students</p>
+    <div style="margin-top:10px;">
+        <a href="#">Privacy Policy</a> | 
+        <a href="#">Terms of Service</a> | 
+        <a href="#">About Us</a>
+    </div>
+</footer>
+
+</div>
+
+<script>
+// ================= DATA =================
+const defaultNotes = [
+    // Class 9 Notes
+    {
+        id: 1,
+        title: "Class 9 Mathematics - Number System",
+        class: "Class 9",
+        category: "Mathematics",
+        description: "Complete number system notes for Class 9 CBSE",
+        size: "2.5 MB",
+        downloads: 1250
+    },
+    {
+        id: 2,
+        title: "Class 9 Mathematics - Polynomials",
+        class: "Class 9",
+        category: "Mathematics",
+        description: "Polynomials and factorisation notes for Class 9",
+        size: "3.2 MB",
+        downloads: 980
+    },
+    {
+        id: 3,
+        title: "Class 9 Science - Matter",
+        class: "Class 9",
+        category: "Science",
+        description: "States of matter and particle theory",
+        size: "4.1 MB",
+        downloads: 1560
+    },
+    {
+        id: 4,
+        title: "Class 9 English - Hornbill",
+        class: "Class 9",
+        category: "English",
+        description: "Hornbill textbook chapter summaries",
+        size: "1.8 MB",
+        downloads: 890
+    },
+    {
+        id: 5,
+        title: "Class 9 Social Science - History",
+        class: "Class 9",
+        category: "Social Science",
+        description: "The French Revolution notes",
+        size: "2.2 MB",
+        downloads: 750
+    },
+    
+    // Class 10 Notes
+    {
+        id: 6,
+        title: "Class 10 Mathematics - Algebra",
+        class: "Class 10",
+        category: "Mathematics",
+        description: "Complete algebra notes including quadratic equations",
+        size: "2.8 MB",
+        downloads: 1650
+    },
+    {
+        id: 7,
+        title: "Class 10 Mathematics - Geometry",
+        class: "Class 10",
+        category: "Mathematics",
+        description: "Geometry theorems and proofs for Board exams",
+        size: "3.5 MB",
+        downloads: 1380
+    },
+    {
+        id: 8,
+        title: "Class 10 Science - Physics",
+        class: "Class 10",
+        category: "Physics",
+        description: "Light reflection and refraction notes",
+        size: "4.1 MB",
+        downloads: 1560
+    },
+    {
+        id: 9,
+        title: "Class 10 Science - Chemistry",
+        class: "Class 10",
+        category: "Chemistry",
+        description: "Chemical reactions and equations",
+        size: "2.8 MB",
+        downloads: 1320
+    },
+    {
+        id: 10,
+        title: "Class 10 Science - Biology",
+        class: "Class 10",
+        category: "Biology",
+        description: "Life processes and control and coordination",
+        size: "3.5 MB",
+        downloads: 1140
+    },
+    {
+        id: 11,
+        title: "Class 10 English - Grammar",
+        class: "Class 10",
+        category: "English",
+        description: "English grammar and composition for Board exams",
+        size: "1.8 MB",
+        downloads: 990
+    },
+    {
+        id: 12,
+        title: "Class 10 Social Science - History",
+        class: "Class 10",
+        category: "Social Science",
+        description: "India and the contemporary world",
+        size: "3.1 MB",
+        downloads: 820
+    },
+    
+    // Class 11 Notes
+    {
+        id: 13,
+        title: "Class 11 Mathematics - Trigonometry",
+        class: "Class 11",
+        category: "Mathematics",
+        description: "Trigonometric functions and identities",
+        size: "3.2 MB",
+        downloads: 1450
+    },
+    {
+        id: 14,
+        title: "Class 11 Physics - Motion",
+        class: "Class 11",
+        category: "Physics",
+        description: "Laws of motion and kinematics",
+        size: "4.5 MB",
+        downloads: 1680
+    },
+    {
+        id: 15,
+        title: "Class 11 Chemistry - States of Matter",
+        class: "Class 11",
+        category: "Chemistry",
+        description: "Gas laws and kinetic theory",
+        size: "3.1 MB",
+        downloads: 1290
+    },
+    {
+        id: 16,
+        title: "Class 11 Biology - Cell Structure",
+        class: "Class 11",
+        category: "Biology",
+        description: "Cell biology and cell organelles",
+        size: "2.9 MB",
+        downloads: 1050
+    },
+    {
+        id: 17,
+        title: "Class 11 English - Hornbill",
+        class: "Class 11",
+        category: "English",
+        description: "Hornbill textbook prose and poetry",
+        size: "2.4 MB",
+        downloads: 780
+    },
+    
+    // Class 12 Notes
+    {
+        id: 18,
+        title: "Class 12 Mathematics - Calculus",
+        class: "Class 12",
+        category: "Mathematics",
+        description: "Derivatives and integrals for Board exams",
+        size: "4.2 MB",
+        downloads: 1890
+    },
+    {
+        id: 19,
+        title: "Class 12 Physics - Electrostatics",
+        class: "Class 12",
+        category: "Physics",
+        description: "Electric charges and fields",
+        size: "5.1 MB",
+        downloads: 1720
+    },
+    {
+        id: 20,
+        title: "Class 12 Chemistry - Solutions",
+        class: "Class 12",
+        category: "Chemistry",
+        description: "Solution chemistry and colligative properties",
+        size: "3.8 MB",
+        downloads: 1450
+    },
+    {
+        id: 21,
+        title: "Class 12 Biology - Reproduction",
+        class: "Class 12",
+        category: "Biology",
+        description: "Human reproduction and genetics",
+        size: "3.5 MB",
+        downloads: 1280
+    },
+    {
+        id: 22,
+        title: "Class 12 English - Flamingo",
+        class: "Class 12",
+        category: "English",
+        description: "Flamingo textbook prose and poetry",
+        size: "2.6 MB",
+        downloads: 920
+    },
+    {
+        id: 23,
+        title: "Class 12 Social Science - Politics",
+        class: "Class 12",
+        category: "Social Science",
+        description: "Contemporary Indian politics",
+        size: "2.8 MB",
+        downloads: 650
+    }
+];
+
+// Initialize notes from localStorage or use default
+let notes = JSON.parse(localStorage.getItem('notes')) || defaultNotes;
+
+// User management
+let users = JSON.parse(localStorage.getItem('users')) || [];
+let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+
+// ================= INITIALIZATION =================
+document.addEventListener('DOMContentLoaded', function() {
+    renderNotes();
+    updateNavbar();
+    
+    // Check for hash in URL
+    if(window.location.hash){
+        const section = window.location.hash.substring(1);
+        showSection(section);
+    }
+});
+
+// ================= NAVIGATION =================
+function showSection(sectionName) {
+    // Hide all sections
+    document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Remove active class from sidebar links
+    document.querySelectorAll('.sidebar a').forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Show selected section
+    const targetSection = document.getElementById(sectionName + 'Section');
+    if(targetSection){
+        targetSection.classList.add('active');
+        
+        // Update sidebar
+        const activeLink = document.querySelector(`.sidebar a[href="#${sectionName}"]`);
+        if(activeLink){
+            activeLink.classList.add('active');
+        }
+    }
+    
+    // Close mobile sidebar
+    document.getElementById('sidebar').classList.remove('open');
+    
+    // Update URL
+    window.location.hash = sectionName;
+}
+
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ================= RENDER NOTES =================
+function renderNotes(subjectFilter = 'all-subject', searchTerm = '') {
+    let filteredNotes = notes;
+    
+    // Get class filter
+    const classFilter = document.getElementById('classFilter') ? document.getElementById('classFilter').value : 'all';
+    
+    // Apply class filter
+    if(classFilter !== 'all'){
+        filteredNotes = filteredNotes.filter(note => note.class === classFilter);
+    }
+    
+    // Apply subject filter
+    if(subjectFilter !== 'all-subject'){
+        filteredNotes = filteredNotes.filter(note => note.category === subjectFilter);
+    }
+    
+    // Apply search filter
+    if(searchTerm){
+        const term = searchTerm.toLowerCase();
+        filteredNotes = filteredNotes.filter(note => 
+            note.title.toLowerCase().includes(term) ||
+            note.description.toLowerCase().includes(term) ||
+            note.category.toLowerCase().includes(term) ||
+            note.class.toLowerCase().includes(term)
+        );
+    }
+    
+    // Render latest notes (home page)
+    const latestContainer = document.getElementById('latestNotes');
+    const latestHTML = filteredNotes.slice(0, 6).map(note => createCardHTML(note)).join('');
+    latestContainer.innerHTML = latestHTML || '<div class="no-results">No notes found</div>';
+    
+    // Render all notes
+    const allContainer = document.getElementById('allNotes');
+    const allHTML = filteredNotes.map(note => createCardHTML(note)).join('');
+    allContainer.innerHTML = allHTML || '<div class="no-results">No notes found</div>';
+}
+
+function createCardHTML(note) {
+    return `
+        <div class="card">
+            <span class="card-category">${note.class} • ${note.category}</span>
+            <h3>${note.title}</h3>
+            <p>${note.description}</p>
+            <div class="card-meta">
+                <span class="card-size">📄 ${note.size} • ⬇ ${note.downloads}</span>
+                <button class="btn-download" onclick="downloadNote('${note.title}')">
+                    ⬇ Download
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// ================= FILTER & SEARCH =================
+function filterNotes(subject = 'all-subject', btnElement) {
+    // Update subject filter buttons
+    if(btnElement){
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        btnElement.classList.add('active');
+    }
+    
+    // Get search term
+    const searchTerm = document.getElementById('searchInput').value;
+    
+    // Render filtered notes
+    renderNotes(subject, searchTerm);
+}
+
+function filterByClass(className) {
+    // Set class filter
+    const classSelect = document.getElementById('classFilter');
+    classSelect.value = className;
+    
+    // Reset subject filter
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector('.filter-btn').classList.add('active');
+    
+    // Render filtered notes
+    renderNotes('all-subject', '');
+}
+
+function handleSearch() {
+    const searchTerm = document.getElementById('searchInput').value;
+    const activeBtn = document.querySelector('.filter-btn.active');
+    const subjectFilter = activeBtn ? activeBtn.textContent.trim() : 'All';
+    
+    // Check which subject filter is active
+    let currentSubject = 'all-subject';
+    const subjects = ['Mathematics', 'Science', 'English', 'Social Science', 'Physics', 'Chemistry', 'Biology'];
+    if(subjects.includes(subjectFilter)){
+        currentSubject = subjectFilter;
+    }
+    
+    renderNotes(currentSubject, searchTerm);
+}
+
+// ================= UPLOAD HANDLER =================
+function handleUpload(event) {
+    event.preventDefault();
+    
+    const title = document.getElementById('noteTitle').value.trim();
+    const noteClass = document.getElementById('noteClass').value;
+    const category = document.getElementById('noteCategory').value;
+    const description = document.getElementById('noteDescription').value.trim();
+    const fileInput = document.getElementById('noteFile');
+    const uploadBtn = document.getElementById('uploadBtn');
+    
+    // Validate
+    if(!title || !noteClass || !category || !fileInput.files[0]){
+        showAlert('Please fill all required fields!');
+        return;
+    }
+    
+    // Show loading
+    uploadBtn.disabled = true;
+    uploadBtn.innerHTML = '<span class="loading"></span>Uploading...';
+    
+    // Simulate upload delay
+    setTimeout(() => {
+        // Add new note
+        const newNote = {
+            id: Date.now(),
+            title: title,
+            class: noteClass,
+            category: category,
+            description: description || 'No description provided',
+            size: (fileInput.files[0].size / (1024 * 1024)).toFixed(2) + ' MB',
+            downloads: 0
+        };
+        
+        notes.unshift(newNote);
+        localStorage.setItem('notes', JSON.stringify(notes));
+        
+        // Reset form
+        document.getElementById('uploadForm').reset();
+        
+        // Show success
+        document.getElementById('successMessage').style.display = 'block';
+        
+        // Reset button
+        uploadBtn.disabled = false;
+        uploadBtn.innerHTML = 'Upload PDF';
+        
+        // Refresh notes display
+        renderNotes();
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+            document.getElementById('successMessage').style.display = 'none';
+        }, 3000);
+        
+    }, 1500);
+}
+
+// ================= DOWNLOAD HANDLER =================
+function downloadNote(title) {
+    showAlert(`⬇ Starting download: "${title}"\n\nNote: In a real app, this would download the PDF file.`);
+}
+
+// ================= AUTH HANDLERS =================
+function handleRegister(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('registerName').value.trim();
+    const email = document.getElementById('registerEmail').value.trim().toLowerCase();
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('registerConfirmPassword').value;
+    const userClass = document.getElementById('registerClass').value;
+    
+    // Validate passwords match
+    if(password !== confirmPassword){
+        showAlert('❌ Passwords do not match!');
+        return;
+    }
+    
+    // Check if email already exists
+    if(users.some(u => u.email === email)){
+        showAlert('❌ Email already registered! Please login.');
+        return;
+    }
+    
+    // Create new user
+    const newUser = {
+        id: Date.now(),
+        name: name,
+        email: email,
+        password: password,
+        userClass: userClass,
+        registeredDate: new Date().toISOString()
+    };
+    
+    // Save user
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+    
+    // Auto login after registration
+    currentUser = newUser;
+    localStorage.setItem('currentUser', JSON.stringify(newUser));
+    
+    showAlert('✅ Registration successful! Welcome, ' + name + '!');
+    
+    // Reset form
+    document.getElementById('registerForm').reset();
+    
+    // Update navbar
+    updateNavbar();
+    
+    // Go to home
+    showSection('home');
+}
+
+function handleLogin(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+    const password = document.getElementById('loginPassword').value;
+    
+    // Find user with matching email and password
+    const user = users.find(u => u.email === email && u.password === password);
+    
+    if(user){
+        // Store logged in user
+        currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        showAlert('✅ Login successful! Welcome back, ' + user.name + '!');
+        
+        // Reset form
+        document.getElementById('loginForm').reset();
+        
+        // Update navbar
+        updateNavbar();
+        
+        // Go to home
+        showSection('home');
+    } else {
+        showAlert('❌ Invalid email or password! Please register if you don\'t have an account.');
+    }
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem('currentUser');
+    showAlert('You have been logged out successfully!');
+    updateNavbar();
+    showSection('home');
+}
+
+function updateNavbar() {
+    const nav = document.getElementById('navLinksContainer');
+    
+    if(currentUser){
+        nav.innerHTML = `
+            <div class="nav-user">
+                <span>👋 Welcome, ${currentUser.name}</span>
+                <a href="#" class="btn-logout" onclick="logout()">Logout</a>
+            </div>
+        `;
+    } else {
+        nav.innerHTML = `
+            <a href="#login" class="btn-login" onclick="showSection('login')">Login</a>
+            <a href="#register" class="btn-register" onclick="showSection('register')">Register</a>
+        `;
+    }
+}
+
+// ================= ALERT HELPER =================
+function showAlert(message) {
+    alert(message);
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(e) {
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.querySelector('.menu-toggle');
+    
+    if(window.innerWidth <= 768 && 
+       !sidebar.contains(e.target) && 
+       !menuToggle.contains(e.target) &&
+       sidebar.classList.contains('open')){
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+
+</body>
+</html>
